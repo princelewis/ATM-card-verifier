@@ -31,9 +31,5 @@ public class TokenHasher {
 
     }
 
-    public static void main(String[] args) {
-        String appKey = "hello_world";
-        System.out.println(getHashedToken(appKey,"87"));
-    }
 
 }
