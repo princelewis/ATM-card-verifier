@@ -38,7 +38,7 @@ public class TokenVerifier {
 
             if (token.equals(systemHashedToken)) return true;
 
-//        log.info("Api token is wrong");
+        log.info("Api token is wrong");
 //            throw new BadCredentialsException("The API token is wrong.");
         return false;
 
