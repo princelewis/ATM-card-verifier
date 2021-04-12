@@ -12,7 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
+
 
 @Service("cardInfoService")
 @Slf4j
@@ -56,6 +58,16 @@ public class CardInfoServiceImpl implements CardInfoService {
             cardInfo.setSuccess(false);
             cardInfo.setCardNumber(newCardNumber);
             cardInfoRepository.save(cardInfo);
+
+            if (ex instanceof HttpStatusCodeException) {
+                HttpStatusCodeException exception = (HttpStatusCodeException) ex;
+                log.error("Http exception occurred while trying to get response from third-party API" +
+                                "with code: {} and body: {}", exception.getStatusCode(),
+                        exception.getResponseBodyAsString(), exception);
+
+                throw new CardInfoServiceException(ErrorMessages.NO_RECORD_FOUND.getErrorMessage());
+            }
+
             throw new CardInfoServiceException(ErrorMessages.CONNECTIVITY_ERROR.getErrorMessage());
         }
 
@@ -90,6 +102,7 @@ public class CardInfoServiceImpl implements CardInfoService {
         CardInfoResponse cardInfoResponse = new CardInfoResponse();
         cardInfoResponse.setSuccess(true);
         cardInfoResponse.setPayload(payload);
+
 
 
         return cardInfoResponse;
