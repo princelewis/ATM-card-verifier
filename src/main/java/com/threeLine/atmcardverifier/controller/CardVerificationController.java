@@ -2,8 +2,10 @@ package com.threeLine.atmcardverifier.controller;
 
 import com.threeLine.atmcardverifier.model.CardInfo;
 import com.threeLine.atmcardverifier.payload.CardInfoResponse;
+import com.threeLine.atmcardverifier.payload.CardStatResponse;
 import com.threeLine.atmcardverifier.repository.CardInfoRepository;
 import com.threeLine.atmcardverifier.service.CardInfoService;
+import com.threeLine.atmcardverifier.service.CardStatService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -20,11 +22,20 @@ public class CardVerificationController {
     @Autowired
     CardInfoService cardInfoService;
 
-    @PostMapping("/verify/{customerNumber}")
+    @Autowired
+    CardStatService cardStatService;
+
+    @GetMapping("/verify/{customerNumber}")
     public ResponseEntity<CardInfoResponse> getCardDetail(@PathVariable String customerNumber) {
 
 
         return new ResponseEntity<>(cardInfoService.getCardInfo(customerNumber), HttpStatus.OK);
+    }
+
+    @GetMapping("/stats")
+    public ResponseEntity<CardStatResponse> getCardStat(@RequestParam int start, int limit) {
+
+        return new ResponseEntity<>(cardStatService.getCardStat(start, limit), HttpStatus.OK);
     }
 
 }
